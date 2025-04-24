@@ -1,64 +1,83 @@
 // src/pages/ProductDetailPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchProductById } from '../services/productService'; // Adjust path if needed
+import { fetchProductById } from '../services/productService'; // Ensure path is correct
+
+// --- React Bootstrap Imports (Removed Row, Col, Image) ---
+import Container from 'react-bootstrap/Container';
+import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
+
+// --- No image imports or image URL logic needed ---
 
 function ProductDetailPage() {
-  const { id } = useParams(); // Get the product ID from the URL parameter
-  const [product, setProduct] = useState(null); // State for product data
-  const [loading, setLoading] = useState(true);  // State for loading status
-  const [error, setError] = useState(null);      // State for error status
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  // --- Data Fetching useEffect (no changes needed) ---
   useEffect(() => {
-    // Define async function to fetch product data
     const loadProductData = async () => {
       try {
         setLoading(true);
         setError(null);
         const data = await fetchProductById(id);
-        setProduct(data); // Set the fetched product data in state
+        setProduct(data);
       } catch (err) {
-        // Handle errors, including the 404 "Product not found"
         if (err.response && err.response.status === 404) {
-            setError('Product not found.');
+          setError('Product not found.');
         } else {
-            setError(err.message || 'Failed to fetch product details');
+          setError(err.message || 'Failed to fetch product details');
         }
         console.error(err);
       } finally {
-        setLoading(false); // Stop loading indicator regardless of success/error
+        setLoading(false);
       }
     };
+    loadProductData();
+  }, [id]);
 
-    loadProductData(); // Call the function when the component mounts or ID changes
-
-  }, [id]); // Dependency array includes [id] - re-run effect if ID changes
-
-  // --- Conditional Rendering ---
+  // --- Conditional Rendering (no changes needed) ---
   if (loading) {
-    return <p>Loading product details...</p>;
+    return <Container className="text-center mt-5 mb-5"><p>Loading product details...</p></Container>;
   }
-
   if (error) {
-    return <p style={{ color: 'red' }}>Error: {error}</p>;
+    return <Container className="mt-4 mb-5"><Alert variant="danger">Error: {error}</Alert></Container>;
   }
-
   if (!product) {
-    // Should be caught by error handling, but good as a fallback
-    return <p>Product data could not be loaded.</p>;
+    return <Container className="mt-4 mb-5"><Alert variant="warning">Product data could not be loaded.</Alert></Container>;
   }
 
-  // --- Display Product Details ---
+  // --- SIMPLIFIED Product Details Display (No Image, No Columns) ---
   return (
-    <div>
-      <h2>{product.name}</h2>
-      {/* Add image here later if available: <img src={product.image_url} alt={product.name} /> */}
-      <p><strong>Flavor:</strong> {product.flavor}</p>
-      <p><strong>Type:</strong> {product.type}</p>
-      <p><strong>Price:</strong> ${Number(product.price).toFixed(2)}</p>
-      {product.description && <p><strong>Description:</strong> {product.description}</p>}
-      {/* Add more details or components like "Add to Cart" button later */}
-    </div>
+    <Container className="my-4 mb-5">
+
+      {/* Product Name */}
+      <h1 className="mb-3">{product.name}</h1>
+
+      {/* Price */}
+      <p className="fs-4 fw-bold mb-3">${Number(product.price).toFixed(2)}</p>
+
+      {/* Other Details */}
+      <p className="mb-1"><strong>Flavor:</strong> {product.flavor}</p>
+      <p className="mb-3"><strong>Type:</strong> {product.type}</p>
+
+      {/* Description */}
+      {product.description && (
+        <>
+          <p className="mb-1"><strong>Description:</strong></p>
+          <p className="mb-4">{product.description}</p>
+        </>
+      )}
+
+      {/* Add to Cart Button */}
+      <Button variant="primary" size="lg">Add to Cart</Button>
+      {/* Add onClick handler later */}
+
+      {/* Removed Row, Col, and Image components */}
+
+    </Container>
   );
 }
 
