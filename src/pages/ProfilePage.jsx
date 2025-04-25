@@ -1,59 +1,97 @@
 import React, { useState, useEffect } from 'react';
-import { fetchUserProfile } from '../services/userService'; // Adjust path as needed
+import { fetchUserProfile } from '../services/userService'; // Ensure path is correct
+
+// --- React Bootstrap Imports ---
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Alert from 'react-bootstrap/Alert'; // For errors
 
 function ProfilePage() {
-  // If you need the login status for other logic here, you can get it:
-  // const { isLoggedIn } = useAuth();
-
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // --- Data fetching useEffect (no changes needed) ---
   useEffect(() => {
     const loadProfile = async () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await fetchUserProfile(); // Service function uses configured apiClient
+        const data = await fetchUserProfile();
         setProfileData(data);
       } catch (err) {
-        setError(err.message);
-        console.error('Error details:', err); // Log the full error object
+        setError(err.message || 'Failed to load profile'); // Simplified error message
+        console.error('Error details:', err);
       } finally {
         setLoading(false);
       }
     };
-
     loadProfile();
-  }, []); // Fetch on mount
+  }, []);
 
+  // --- Conditional Rendering ---
   if (loading) {
-    return <p>Loading profile...</p>;
+    // Added Container for consistency
+    return <Container className="text-center mt-5 mb-5"><p>Loading profile...</p></Container>;
   }
 
   if (error) {
-    return <p style={{ color: 'red' }}>Error loading profile: {error}</p>;
+    // Used Alert for consistency
+    return <Container className="mt-4 mb-5"><Alert variant="danger">Error loading profile: {error}</Alert></Container>;
   }
 
-  // It's good practice to check if profileData exists before trying to access its properties
   if (!profileData) {
-    return <p>Could not load profile data.</p>;
+    // Used Alert for consistency
+    return <Container className="mt-4 mb-5"><Alert variant="warning">Could not load profile data.</Alert></Container>;
   }
 
+  // --- Styled Profile Display ---
   return (
-    <div>
-      <h2>My Profile</h2>
-      <p><strong>ID:</strong> {profileData.id}</p>
-      <p><strong>Email:</strong> {profileData.email}</p>
-      {/* Use optional chaining ?. just in case name is null/undefined */}
-      <p><strong>Name:</strong> {profileData.name?.trim() ? profileData.name : 'N/A'}</p>
-      <p><strong>Role:</strong> {profileData.role}</p>
-      {/* Safely format date only if created_at exists */}
-      {profileData.created_at && (
-          <p><strong>Member Since:</strong> {new Date(profileData.created_at).toLocaleDateString()}</p>
-      )}
-      {/* Add edit profile button/functionality later */}
-    </div>
+    <Container className="my-4 mb-5">
+      {/* Center the content */}
+      <Row className="justify-content-md-center">
+        <Col md={8} lg={6}> {/* Control width */}
+          <h2 className="text-center mb-4">My Profile</h2>
+          {/* Use a Card for visual structure */}
+          <Card>
+            {/* Optional Header */}
+            {/* <Card.Header>User Details</Card.Header> */}
+            <ListGroup variant="flush"> {/* Flush removes card borders from list items */}
+              <ListGroup.Item className="d-flex justify-content-between">
+                <strong>ID:</strong>
+                <span>{profileData.id}</span>
+              </ListGroup.Item>
+              <ListGroup.Item className="d-flex justify-content-between">
+                <strong>Email:</strong>
+                <span>{profileData.email}</span>
+              </ListGroup.Item>
+              <ListGroup.Item className="d-flex justify-content-between">
+                <strong>Name:</strong>
+                {/* Use optional chaining and provide fallback */}
+                <span>{profileData.name?.trim() ? profileData.name : 'N/A'}</span>
+              </ListGroup.Item>
+              <ListGroup.Item className="d-flex justify-content-between">
+                <strong>Role:</strong>
+                <span>{profileData.role}</span>
+              </ListGroup.Item>
+              {profileData.created_at && (
+                <ListGroup.Item className="d-flex justify-content-between">
+                  <strong>Member Since:</strong>
+                  <span>{new Date(profileData.created_at).toLocaleDateString()}</span>
+                </ListGroup.Item>
+              )}
+            </ListGroup>
+             {/* Optional Footer for buttons like Edit Profile */}
+            {/* <Card.Footer className="text-end">
+              <Button variant="secondary" size="sm">Edit Profile</Button>
+            </Card.Footer> */}
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

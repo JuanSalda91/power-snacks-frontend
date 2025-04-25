@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
-import {  useNavigate } from "react-router-dom";
-import { signupUser } from "../services/authService"; // Import the signup service
+import { useNavigate, Link } from "react-router-dom"; // Import Link
+import { signupUser } from "../services/authService"; // Ensure path is correct
+
+// --- React Bootstrap Imports ---
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
+import Spinner from 'react-bootstrap/Spinner';
 
 function SignupPage() {
   const [name, setName] = useState('');
@@ -9,7 +18,7 @@ function SignupPage() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  const navigate = useNavigate(); // Hook for programmatic navigation
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -18,11 +27,9 @@ function SignupPage() {
     setLoading(true);
 
     try {
-      const { message } = await signupUser({ name, email, password }); //Token/user also returned, handle if needed
-      setSuccessMessage(message + 'Redirecting to login...');
-
-      // Clear form (optional)
-      // setName(''); setEmail(''); setPassword('');
+      // Assuming signupUser returns { message } upon success
+      const { message } = await signupUser({ name, email, password });
+      setSuccessMessage(message + ' Redirecting to login...');
 
       // Redirect to login page after a short delay
       setTimeout(() => {
@@ -38,50 +45,109 @@ function SignupPage() {
   };
 
   return (
-    <div>
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="signup-name">Name:</label>
-          <input
-            type="text"
-            id="sigup-name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            // required // add if name is required by backend logic/DB
-            disabled={loading}
-          />
-        </div>
-        <div>
-          <label htmlFor="signup-email">Email:</label>
-          <input
-            type="email"
-            id="signup-email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={loading}
-          />
-        </div>
-        <div>
-          <label htmlFor ="signup-password">Password:</label>
-          <input
-            type="password"
-            id="signup-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={6} //Example: add password complexity requirements later
-            disabled={loading}
-          />
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-        <button type="submit" disabled={loading}>
-          {loading ? 'Signing up...' : 'Sign Up'}
-        </button>
-      </form>
-    </div>
+    // Use Container with vertical margins
+    <Container className="my-4 mb-5">
+       {/* Center the form using Row and Col */}
+      <Row className="justify-content-md-center">
+        <Col md={6} lg={5} xl={4}> {/* Adjust column size as needed */}
+          <h2 className="text-center mb-4">Sign Up</h2>
+
+          {/* Use React Bootstrap Form */}
+          <Form onSubmit={handleSubmit}>
+
+            {/* Name Input */}
+            <Form.Group className="mb-3" controlId="signup-name">
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                // required // Uncomment if name is required
+                disabled={loading || !!successMessage} // Disable if loading or success
+              />
+            </Form.Group>
+
+            {/* Email Input */}
+            <Form.Group className="mb-3" controlId="signup-email">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                disabled={loading || !!successMessage}
+              />
+            </Form.Group>
+
+            {/* Password Input */}
+            <Form.Group className="mb-3" controlId="signup-password">
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6} // Keep or adjust based on backend requirements
+                disabled={loading || !!successMessage}
+              />
+              <Form.Text className="text-muted">
+                 Password must be at least 6 characters long.
+               </Form.Text>
+            </Form.Group>
+
+             {/* Error Alert */}
+             {error && (
+               <Alert variant="danger" className="mt-3">
+                 {error}
+               </Alert>
+             )}
+
+             {/* Success Alert */}
+             {successMessage && (
+               <Alert variant="success" className="mt-3">
+                 {successMessage}
+               </Alert>
+             )}
+
+
+            {/* Submit Button with Loading State */}
+            <Button
+              variant="primary"
+              type="submit"
+              disabled={loading || !!successMessage} // Disable if loading or success
+              className="w-100 mt-3"
+            >
+              {loading ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    className="me-2"
+                  />
+                  Signing up...
+                </>
+              ) : (
+                'Sign Up'
+              )}
+            </Button>
+          </Form>
+
+           {/* Optional: Link to Login Page */}
+           <div className="text-center mt-3">
+             <small>
+               Already have an account? <Link to="/login">Log In</Link>
+             </small>
+           </div>
+
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

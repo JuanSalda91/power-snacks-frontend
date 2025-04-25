@@ -1,12 +1,15 @@
 import React from 'react';
 import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
+import { useCart } from './contexts/CartContext';
 
 // --- React Bootstrap Imports ---
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import Button from 'react-bootstrap/Button'; // Import Button for Logout
+import Button from 'react-bootstrap/Button';
+import Badge from 'react-bootstrap/Badge';
+import { Cart } from 'react-bootstrap-icons';
 
 // --- Page Components ---
 import ProfilePage from './pages/ProfilePage';
@@ -15,13 +18,17 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
+import CartPage from './pages/CartPage';
 
 // --- Component for Product List ---
 import ProductList from './components/Products/ProductList';
 
 function App() {
   const { isLoggedIn, logout, isLoading } = useAuth();
+  const { getCartItemCount } = useCart();
   const navigate = useNavigate();
+
+  const itemCount = getCartItemCount();
 
   const handleLogout = () => {
     logout();
@@ -68,6 +75,20 @@ function App() {
                   <Nav.Link as={Link} to="/signup">Sign Up</Nav.Link>
                 </>
               )}
+              <Nav.Link as={Link} to="/cart" className="position-relative">
+              <Cart size={24} />
+              {itemCount > 0 && (
+                <Badge
+                pill
+                bg="danger"
+                className="position-absolute top-0 start-100 translate-middle"
+                style={{ fontsize: '0.6em' }}
+                >
+                  {itemCount}
+                  <span className="visually-hidden">items in cart</span>
+                  </Badge>
+              )}
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -81,7 +102,9 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/products" element={<ProductList />} />
           <Route path="/products/:id" element={<ProductDetailPage />} />
+          <Route path="/cart" element={<CartPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/cart" element={<CartPage/>} />
           <Route path="/signup" element={<SignupPage />} />
           <Route
             path="/profile"
