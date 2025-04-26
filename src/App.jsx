@@ -64,8 +64,6 @@ function App() {
             <Nav>
               {isLoggedIn ? (
                 <>
-                  {/* Welcome message can be added here if desired */}
-                  {/* <Navbar.Text className="me-2">Welcome, {user.email}</Navbar.Text> */}
                   <Nav.Link as={Link} to="/profile" className="me-2">My Profile</Nav.Link>
                   <Button variant="outline-light" size="sm" onClick={handleLogout}>Logout</Button>
                 </>
@@ -81,7 +79,7 @@ function App() {
                 <Badge
                 pill
                 bg="danger"
-                className="position-absolute top-0 start-100 translate-middle"
+                className="position-absolute top-2 start-100 translate-middle"
                 style={{ fontsize: '0.6em' }}
                 >
                   {itemCount}

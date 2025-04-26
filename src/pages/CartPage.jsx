@@ -11,7 +11,7 @@ import { useCart } from '../contexts/CartContext'; // Import useCart
 
 function CartPage() {
   // Get cart state and functions from the context
-  const { cartItems, removeFromCart, getCartTotal, getCartItemCount, clearCart } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, getCartTotal, getCartItemCount, clearCart } = useCart();
 
   const totalItems = getCartItemCount();
   const totalPrice = getCartTotal();
@@ -32,48 +32,66 @@ function CartPage() {
         // Display cart items if not empty
         <>
           <ListGroup variant="flush" className="mb-4">
-            {cartItems.map((item) => (
-              <ListGroup.Item key={item.id} className="px-0"> {/* Use item.id as key */}
-                <Row className="align-items-center"> {/* Align items vertically center */}
-                  {/* Image Column */}
-                  <Col xs={2} md={1}>
-                    <Image
-                      src={item.image || "https://via.placeholder.com/150?text=No+Image"} // Use image from cart item
-                      alt={item.name}
-                      thumbnail // Adds a light border
-                      style={{ width: '60px', height: '60px', objectFit: 'cover' }} // Consistent small size
-                    />
-                  </Col>
+              {cartItems.map((item) => (
+                <ListGroup.Item key={item.id} className="px-0">
+                  <Row className="align-items-center">
+                    {/* Image Column */}
+                    <Col xs={2} md={1}>
+                      <Image
+                        src={item.image || "https://via.placeholder.com/150?text=No+Image"}
+                        alt={item.name}
+                        thumbnail
+                        style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                      />
+                    </Col>
 
-                  {/* Name Column */}
-                  <Col xs={4} md={5}>
-                    <Link to={`/products/${item.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                      {item.name}
-                    </Link>
-                  </Col>
+                    {/* Name Column */}
+                    <Col xs={3} md={5}> {/* Adjusted column size */}
+                      <Link to={`/products/${item.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        {item.name}
+                      </Link>
+                    </Col>
 
-                  {/* Price/Quantity Column */}
-                  <Col xs={3} md={3} className="text-end">
-                    <div>Qty: {item.quantity}</div>
-                    <div>${Number(item.price).toFixed(2)} each</div>
-                  </Col>
+                    {/* --- UPDATED Quantity Controls Column --- */}
+                    <Col xs={4} md={3} className="text-center">
+                      <div className="d-flex justify-content-center align-items-center">
+                        <Button
+                          variant="outline-secondary"
+                          size="sm"
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          className="px-2"
+                        >
+                          -
+                        </Button>
+                        <span className="mx-2">{item.quantity}</span>
+                        <Button
+                          variant="outline-secondary"
+                          size="sm"
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className="px-2"
+                        >
+                          +
+                        </Button>
+                      </div>
+                      <div className='mt-1' style={{ fontSize: '0.9em' }}>${Number(item.price).toFixed(2)} each</div>
+                    </Col>
+                    
 
-                  {/* Line Total / Remove Button Column */}
-                  <Col xs={3} md={3} className="text-end">
-                     <div>${(Number(item.price) * item.quantity).toFixed(2)}</div>
-                     <Button
+                    <Col xs={3} md={3} className="text-end">
+                      <div>${(Number(item.price) * item.quantity).toFixed(2)}</div>
+                      <Button
                         variant="outline-danger"
                         size="sm"
-                        onClick={() => removeFromCart(item.id)} // Call removeFromCart with item ID
+                        onClick={() => removeFromCart(item.id)}
                         className="mt-1"
-                     >
-                         Remove
-                     </Button>
-                  </Col>
-                </Row>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
+                      >
+                        Remove
+                      </Button>
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
 
           {/* Cart Summary and Actions */}
           <Row className="justify-content-end">
@@ -91,9 +109,13 @@ function CartPage() {
                 </ListGroup.Item>
               </ListGroup>
               <div className="d-grid gap-2 mt-3"> {/* d-grid makes buttons full width */}
-                 <Button variant="primary" size="lg" disabled> {/* Disabled for now */}
-                    Proceed to Checkout
-                 </Button>
+              <Button
+    variant="primary"
+    size="lg"
+    onClick={() => alert('Checkout functionality is not implemented in this demo.')}
+>
+    Proceed to Checkout
+</Button>
                  <Button variant="outline-secondary" onClick={clearCart}>
                     Clear Cart
                  </Button>
