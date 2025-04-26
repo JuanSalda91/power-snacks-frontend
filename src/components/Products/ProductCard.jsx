@@ -1,71 +1,71 @@
 // src/components/Products/ProductCard.jsx
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom'; // Needed to make the whole card a link
-import Card from 'react-bootstrap/Card';  // Import React-Bootstrap Card
-import './ProductCard.css'
+import { Link } from 'react-router-dom';
+import Card from 'react-bootstrap/Card';
+import './ProductCard.css'; // Keep for image sizing consistency
+
+// Define backend URL (or import from central config/env)
+const BACKEND_URL = 'http://localhost:5001'; // Adjust if your backend port is different
 
 function ProductCard({ product }) {
   const productLink = `/products/${product.id}`;
 
-  // Use the displayImage passed in via props, provide a generic placeholder if it's missing
-  const imageUrl = product.displayImage || "https://via.placeholder.com/286x180?text=Image+Not+Available";
+  // --- Construct the full absolute image URL ---
+  // Assumes product object has 'image_url' like '/images/your-image.jpg'
+  const imageUrl = product.image_url
+    ? `${BACKEND_URL}${product.image_url}` // Prepend backend URL
+    : "https://via.placeholder.com/286x180?text=Image+Not+Available"; // Fallback
 
-  // Style for the Link wrapper (important for h-100)
   const linkStyle = {
     textDecoration: 'none',
     color: 'inherit',
     display: 'block',
-    height: '100%', // Crucial: Allows card inside to use h-100 correctly
+    height: '100%',
   };
 
   return (
     <Link to={productLink} style={linkStyle}>
-      {/* Add className="h-100" HERE to make cards in the same Row equal height */}
       <Card className="h-100">
-
-        {/* --- ADDED: Card.Img component to display the image --- */}
+        {/* Card.Img uses the full imageUrl */}
         <Card.Img
           variant="top"
-          src={imageUrl} // Use the image reference passed in product.displayImage
-          alt={product.name} // Set alt text
-          className="product-card-img" // Apply CSS class for consistent height/fit
+          src={imageUrl}
+          alt={product.name}
+          className="product-card-img" // Applies fixed height/object-fit from CSS
         />
-        {/* --- End Added Section --- */}
-
-        <Card.Body className="d-flex flex-cloumn">
-          {/* Using h5 for title, adjust as needed */}
+        <Card.Body className="d-flex flex-column">
+          {/* Wrapper div pushes text content down */}
           <div className="mt-auto">
-          <Card.Title as="h5">{product.name}</Card.Title>
-          <Card.Text>
-            {product.flavor} - {product.type}
-          </Card.Text>
-          <Card.Text className="fw-bold">
-            ${Number(product.price).toFixed(2)}
-          </Card.Text>
-          {product.description && (
-            <Card.Text>
-              <small>{product.description}</small>
-            </Card.Text>
-          )}
+             <Card.Title as="h5">{product.name}</Card.Title>
+             <Card.Text>
+               {product.flavor} - {product.type}
+             </Card.Text>
+             <Card.Text className="fw-bold">
+               ${Number(product.price).toFixed(2)}
+             </Card.Text>
+             {product.description && (
+                <Card.Text>
+                  <small>{product.description}</small>
+                </Card.Text>
+             )}
           </div>
         </Card.Body>
-        {/* No Button component */}
       </Card>
     </Link>
   );
 }
 
-// Updated PropTypes to reflect expectation of displayImage
+// Ensure PropTypes reflect expecting image_url string
 ProductCard.propTypes = {
   product: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     flavor: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    price: PropTypes.string.isRequired,
+    price: PropTypes.string.isRequired, // Keep as string if that's what API returns
     description: PropTypes.string,
-    displayImage: PropTypes.string, // Expecting the processed image path string
+    image_url: PropTypes.string, // Expect image_url string from backend data
   }).isRequired,
 };
 

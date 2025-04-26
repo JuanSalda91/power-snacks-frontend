@@ -57,7 +57,7 @@ export const CartProvider = ({ children }) => {
           id: product.id,
           name: product.name || 'Unknown Name', // Add fallbacks
           price: product.price || 0, // Add fallbacks
-          image: product.displayImage || null, // Use the processed image reference
+          image: product.image_url || null, // Use the processed image reference
           quantity: quantity
         };
         console.log("New item object:", newItem);

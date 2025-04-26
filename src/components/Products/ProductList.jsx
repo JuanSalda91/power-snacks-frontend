@@ -1,4 +1,3 @@
-// src/components/Products/ProductList.jsx
 import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -7,14 +6,8 @@ import Alert from 'react-bootstrap/Alert'; // Import Alert for errors
 import ProductCard from './ProductCard';
 
 // Import the function to fetch all products
-import { fetchAllProducts } from '../../services/productService'; // Correct path
+import { fetchAllProducts } from '../../services/productService';
 
-// Import images for mapping
-import caramelBiteImage from '../../assets/caramelBite.jpg';
-import caramelTubeImage from '../../assets/caramelTube.jpg';
-import chocolateBiteImage from '../../assets/chocolateBite.jpg';
-import chocolateTubeImage from '../../assets/chocolateTube.jpg';
-// import placeholderImage from '../../assets/placeholder.png';
 
 function ProductList() {
   const [products, setProducts] = useState([]);
@@ -33,21 +26,7 @@ function ProductList() {
         // --- Use the imported fetchAllProducts function ---
         const data = await fetchAllProducts();
 
-        // Process the fetched data to add image references
-        const processedProducts = data.map(product => {
-          let imageToShow = null;
-          if (product.type === "Tube") {
-            if (product.flavor === "Chocolate Chunk") imageToShow = chocolateTubeImage;
-            else if (product.flavor === "Caramel") imageToShow = caramelTubeImage;
-          } else if (product.type === "Bites") {
-            if (product.flavor === "Chocolate Chunk") imageToShow = chocolateBiteImage;
-            else if (product.flavor === "Caramel") imageToShow = caramelBiteImage;
-          }
-          // else { imageToShow = placeholderImage; }
-          return { ...product, displayImage: imageToShow };
-        });
-
-        setProducts(processedProducts); // Set state with processed data
+        setProducts(data);
 
       } catch (err) {
         console.error("Failed to fetch products:", err);
@@ -82,7 +61,6 @@ function ProductList() {
           </Col>
         ))}
       </Row>
-      {/* Optional: Add message if no products are found */}
       {products.length === 0 && !loading && (
          <p className="text-center mt-4">No products found.</p>
       )}

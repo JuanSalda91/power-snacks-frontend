@@ -3,7 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col'; 
 import ProductCard from '../components/Products/ProductCard'; 
-import chocolateTube from '../assets/chocolateTube.jpg';
+
 
 function HomePage() {
 
@@ -15,7 +15,7 @@ function HomePage() {
     type: "Tube",
     price: "5.99",
     description: "Ready-to-bake chocolate chunk cookie dough.",
-    displayImage: chocolateTube 
+    image_url: '/images/chocolateTube.jpg'
   };
 
   return (
