@@ -1,14 +1,18 @@
-import apiClient from '../api'; // <-- Import the configured instance
+import apiClient from '../api';
 
-// Function to fetch all products
-export const fetchAllProducts = async () => {
+// Function to fetch all products, now accepts searchTerm
+export const fetchAllProducts = async (searchTerm = '') => {
   try {
-    // Use apiClient
-    const response = await apiClient.get(`/products`); // Path relative to baseURL
+    let path = '/products';
+    if (searchTerm) {
+      path += `$search=${encodeURIComponent(searchTerm)}`;
+    }
+    console.log(`Fetching products with path: ${path}`);
+    const response = await apiClient.get(path);
     return response.data;
   } catch (error) {
     console.error('Error fetching products:', error);
-    throw error; // Re-throw to be handled by the component
+    throw error;
   }
 };
 

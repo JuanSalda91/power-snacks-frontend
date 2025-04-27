@@ -27,7 +27,7 @@ apiClient.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-// --- END INTERCEPTOR ---
 
-// Export the configured client
+
+
 export default apiClient;
