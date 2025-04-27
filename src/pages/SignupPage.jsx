@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from "react-router-dom"; // Import Link
-import { signupUser } from "../services/authService"; // Ensure path is correct
+import { useNavigate, Link } from "react-router-dom";
+import { signupUser } from "../services/authService";
+import { useAuth } from '../contexts/AuthContext';
 
 // --- React Bootstrap Imports ---
 import Container from 'react-bootstrap/Container';
@@ -19,6 +20,7 @@ function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -27,14 +29,21 @@ function SignupPage() {
     setLoading(true);
 
     try {
-      // Assuming signupUser returns { message } upon success
-      const { message } = await signupUser({ name, email, password });
-      setSuccessMessage(message + ' Redirecting to login...');
+      const { message, token, user } = await signupUser({ name, email, password });
+      setSuccessMessage(message + ' Logging you in...');
+
+      if (token && user) {
+        auth.login(token, user);
+      } else {
+        console.warm("Signup successful but token/user data missing in response.");
+        setTimeout(() => navigate('/login'), 1500);
+        return;
+      }
 
       // Redirect to login page after a short delay
       setTimeout(() => {
-        navigate('/login');
-      } , 2000); // 2 seconds delay
+        navigate('/');
+      } , 1500); // 2 seconds delay
 
     } catch (err) {
       setError(err.message || 'Signup failed. Please try again.');
