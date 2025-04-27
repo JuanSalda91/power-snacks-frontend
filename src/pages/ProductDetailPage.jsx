@@ -11,6 +11,8 @@ import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
+import Toast from 'react-bootstrap/Toast';
+import ToastContainer from 'react-bootstrap/ToastContainer';
 
 import './ProductDetailPage.css';
 
@@ -23,6 +25,8 @@ function ProductDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { addToCart } = useCart();
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   // --- Data Fetching useEffect ---
   useEffect(() => {
@@ -61,21 +65,34 @@ function ProductDetailPage() {
   // IMPORTANT: Assumes product object fetched has an 'image_url' property
   const imageUrl = product.image_url
   ? `${STATIC_ASSET_URL}${product.image_url}`
-  : "YOUR_FALLBACK_PLACEHOLDER_URL";
+  : "https://via.placeholder.com/600x400?text=Image+Not+Available";
 
   const handleAddToCart = () => {
     if (product) {
       addToCart(product);
-      console.log(`${product.name} added to cart`);
-      // Optionally add user feedback like an alert or toast here
+      setToastMessage(`${product.name} added to cart!`);
+      setShowToast(true);
     }
   };
   
 
-  // --- Return statement WITH Image and 2-Column Layout ---
   return (
-    <Container className="my-4 mb-5">
-      <Row className="g-5"> {/* Gutters for spacing */}
+    <Container className="my-4 mb-5" position-relative>
+      <ToastContainer position="top-end" className="p-3" style={{ zIndex: 1050 }}>
+        <Toast
+        onClose={() => setShowToast(false)}
+        show={showToast}
+        autohidebg="success"
+        data-bs-theme="dark"
+        >
+          <Toast.Header closeButton={true}>
+            <strong className="me-auto">Notification</strong>
+          </Toast.Header>
+          <Toast.Body>{toastMessage}</Toast.Body>
+        </Toast>
+      </ToastContainer>
+
+      <Row className="g-5">
 
         {/* Column 1: Image */}
         <Col md={6}>
