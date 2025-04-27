@@ -60,7 +60,7 @@ function ProductDetailPage() {
   // --- Determine imageUrl from product state ---
   // IMPORTANT: Assumes product object fetched has an 'image_url' property
   const imageUrl = product.image_url
-  ? `${STATIC_ASSET_URL}${product.image_url}` // Correct syntax
+  ? `${STATIC_ASSET_URL}${product.image_url}`
   : "YOUR_FALLBACK_PLACEHOLDER_URL";
 
   const handleAddToCart = () => {

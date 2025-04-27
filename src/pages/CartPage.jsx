@@ -9,8 +9,7 @@ import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
 import { useCart } from '../contexts/CartContext';
 
-// --- ADD: Define backend URL (or import from central config) ---
-const BACKEND_URL = 'http://localhost:5001'; // Adjust if needed
+const STATIC_ASSET_URL = import.meta.env.VITE_STATIC_ASSET_URL || 'http://localhost:5001';
 
 function CartPage() {
   const { cartItems, removeFromCart, updateQuantity, getCartTotal, getCartItemCount, clearCart } = useCart();
@@ -37,8 +36,8 @@ function CartPage() {
             {cartItems.map((item) => {
               // Construct full image URL for each item
               const imageUrl = item.image
-                ? `${BACKEND_URL}${item.image}` // Prepend backend URL
-                : "https://via.placeholder.com/150?text=No+Image"; // Fallback
+              ? `${STATIC_ASSET_URL}${item.image}`
+              : "https://via.placeholder.com/150?text=No+Image";
 
               return ( // Return the ListGroup.Item JSX
                 <ListGroup.Item key={item.id} className="px-0">
