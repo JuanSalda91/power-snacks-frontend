@@ -5,7 +5,7 @@ export const fetchAllProducts = async (searchTerm = '') => {
   try {
     let path = '/products';
     if (searchTerm) {
-      path += `$search=${encodeURIComponent(searchTerm)}`;
+      path += `?search=${encodeURIComponent(searchTerm)}`;
     }
     console.log(`Fetching products with path: ${path}`);
     const response = await apiClient.get(path);
