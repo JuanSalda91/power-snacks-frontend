@@ -1,8 +1,8 @@
 // src/pages/ProductDetailPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchProductById } from '../services/productService'; // Ensure path is correct (../)
-import { useCart } from '../contexts/CartContext'; // Ensure path is correct (../)
+import { fetchProductById } from '../services/productService';
+import { useCart } from '../contexts/CartContext';
 
 // --- React Bootstrap Imports (Ensure Image, Row, Col are imported) ---
 import Container from 'react-bootstrap/Container';
@@ -14,7 +14,8 @@ import Alert from 'react-bootstrap/Alert';
 
 import './ProductDetailPage.css';
 
-const BACKEND_URL = 'http://localhost:5001';
+
+const STATIC_ASSET_URL = import.meta.env.VITE_STATIC_ASSET_URL || 'http://localhost:5001';
 
 function ProductDetailPage() {
   const { id } = useParams();
@@ -59,8 +60,8 @@ function ProductDetailPage() {
   // --- Determine imageUrl from product state ---
   // IMPORTANT: Assumes product object fetched has an 'image_url' property
   const imageUrl = product.image_url
-    ? `${BACKEND_URL}${product.image_url}` // Use the logic here
-    : "https://via.placeholder.com/600x400?text=Image+Not+Available";
+  ? `${STATIC_ASSET_URL}${product.image_url}` // Correct syntax
+  : "YOUR_FALLBACK_PLACEHOLDER_URL";
 
   const handleAddToCart = () => {
     if (product) {

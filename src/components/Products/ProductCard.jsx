@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import './ProductCard.css'; // Keep for image sizing consistency
 
-// Define backend URL (or import from central config/env)
-const BACKEND_URL = 'http://localhost:5001'; // Adjust if your backend port is different
+
+const STATIC_ASSET_URL = import.meta.env.VITE_STATIC_ASSET_URL || 'http://localhost:5001';
 
 function ProductCard({ product }) {
   const productLink = `/products/${product.id}`;
@@ -14,8 +14,8 @@ function ProductCard({ product }) {
   // --- Construct the full absolute image URL ---
   // Assumes product object has 'image_url' like '/images/your-image.jpg'
   const imageUrl = product.image_url
-    ? `${BACKEND_URL}${product.image_url}` // Prepend backend URL
-    : "https://via.placeholder.com/286x180?text=Image+Not+Available"; // Fallback
+  ? `${STATIC_ASSET_URL}${product.image_url}` // Correct syntax
+  : "YOUR_FALLBACK_PLACEHOLDER_URL"; // Fallback
 
   const linkStyle = {
     textDecoration: 'none',
