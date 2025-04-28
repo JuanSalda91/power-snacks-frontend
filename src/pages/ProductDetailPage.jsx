@@ -1,4 +1,3 @@
-// src/pages/ProductDetailPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchProductById } from '../services/productService';
@@ -13,6 +12,8 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import Toast from 'react-bootstrap/Toast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
+import Spinner from 'react-bootstrap/Spinner';
+
 
 import './ProductDetailPage.css';
 
@@ -54,8 +55,18 @@ function ProductDetailPage() {
   }, [id]);
 
   // --- Conditional Rendering ---
-  if (loading) return <Container className="text-center mt-5 mb-5"><p>Loading...</p></Container>;
+  if (loading) {
+    return (
+      <Container className="text-center my-5">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </Container>
+    );
+  }
+
   if (error) return <Container className="mt-4 mb-5"><Alert variant="danger">Error: {error}</Alert></Container>;
+
   // Added check for product *before* accessing its properties
   if (!product) return <Container className="mt-4 mb-5"><Alert variant="warning">Product not found or could not be loaded.</Alert></Container>;
 
@@ -82,8 +93,10 @@ function ProductDetailPage() {
         <Toast
         onClose={() => setShowToast(false)}
         show={showToast}
-        autohidebg="success"
-        data-bs-theme="dark"
+        delay={2500}
+        autohide
+        bg="transparent"
+        data-bs-theme="light"
         >
           <Toast.Header closeButton={true}>
             <strong className="me-auto">Notification</strong>

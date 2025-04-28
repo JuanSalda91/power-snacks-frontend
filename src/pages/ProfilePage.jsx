@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Alert from 'react-bootstrap/Alert'; // For errors
+import Spinner from 'react-bootstrap/Spinner';
 
 function ProfilePage() {
   const [profileData, setProfileData] = useState(null);
@@ -35,7 +36,13 @@ function ProfilePage() {
   // --- Conditional Rendering ---
   if (loading) {
     // Added Container for consistency
-    return <Container className="text-center mt-5 mb-5"><p>Loading profile...</p></Container>;
+    return (
+      <Container className="text-center my-5">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </Container>
+    );
   }
 
   if (error) {

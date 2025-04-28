@@ -1,0 +1,6 @@
+/* In src/index.css */
+.navbar-nav .nav-link.active {
+  font-weight: bold;
+  /* Could add other styles like color or text-decoration */
+  /* color: #your-active-color !important; */
+}

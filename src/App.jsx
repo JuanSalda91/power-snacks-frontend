@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate, Navigate, NavLink } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import { useCart } from './contexts/CartContext';
 
@@ -43,9 +43,9 @@ function App() {
     <div className="App d-flex flex-column min-vh-100">
 
       {/* --- START: Replaced Header with React-Bootstrap Navbar --- */}
-      <Navbar expand="lg" bg="dark" data-bs-theme="dark" sticky="top"> {/* Responsive collapse, dark theme, stays at top */}
+      <Navbar expand="lg" bg="success" data-bs-theme="light" sticky="top">
         <Container> {/* Constrains navbar content width */}
-          {/* Brand/Logo - links to home */}
+          {/* Brand/Logo */}
           <Navbar.Brand>Power Snacks</Navbar.Brand>
 
           {/* Hamburger button for mobile */}
@@ -55,9 +55,9 @@ function App() {
           <Navbar.Collapse id="basic-navbar-nav">
             {/* Main navigation links (pushed left) */}
             <Nav className="me-auto">
-              <Nav.Link as={Link} to="/">Home</Nav.Link>
-              <Nav.Link as={Link} to="/products">Products</Nav.Link>
-              <Nav.Link as={Link} to="/about">About</Nav.Link>
+              <Nav.Link as={NavLink} to="/" end>Home</Nav.Link>
+              <Nav.Link as={NavLink} to="/products">Products</Nav.Link>
+              <Nav.Link as={NavLink} to="/about">About</Nav.Link>
             </Nav>
 
             {/* Auth-related links/button (pushed right) */}

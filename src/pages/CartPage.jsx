@@ -23,9 +23,10 @@ function CartPage() {
 
       {cartItems.length === 0 ? (
         // Empty cart display
-        <div className="text-center mt-4">
-          <p>Your cart is currently empty.</p>
-          <Link to="/products" className="btn btn-primary">
+        <div className="text-center mt-5 mb-5 p-4 bg-light rounded"> {/* Styled empty state */}
+          <h2>Your Cart is Empty</h2>
+          <p className="text-muted">Looks like you haven't added any power snacks yet!</p>
+          <Link to="/products" className="btn btn-primary mt-2">
             Start Shopping
           </Link>
         </div>
@@ -36,8 +37,8 @@ function CartPage() {
             {cartItems.map((item) => {
               // Construct full image URL for each item
               const imageUrl = item.image
-              ? `${STATIC_ASSET_URL}${item.image}`
-              : "https://via.placeholder.com/150?text=No+Image";
+                ? `${STATIC_ASSET_URL}${item.image}` // Prepend backend URL
+                : "https://via.placeholder.com/150?text=No+Image"; // Fallback
 
               return ( // Return the ListGroup.Item JSX
                 <ListGroup.Item key={item.id} className="px-0">
@@ -53,9 +54,9 @@ function CartPage() {
                     </Col>
 
                     {/* Name Column */}
-                    <Col xs={3} md={5}> {/* Adjusted column size */}
+                    <Col xs={3} md={5}>
                       <Link to={`/products/${item.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                        {item.name} {/* Make sure item name is displayed */}
+                        {item.name} {/* Display item name */}
                       </Link>
                     </Col>
 

@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Alert from 'react-bootstrap/Alert'; // Import Alert for errors
+import Alert from 'react-bootstrap/Alert';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import ProductCard from './ProductCard';
+import Spinner from 'react-bootstrap/Spinner';
+
 
 // Import the function to fetch all products
 import { fetchAllProducts } from '../../services/productService';
@@ -13,7 +15,6 @@ import { fetchAllProducts } from '../../services/productService';
 
 function ProductList() {
   const [products, setProducts] = useState([]);
-  // --- ADDED: Loading and Error States ---
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -55,7 +56,13 @@ function ProductList() {
 
   // --- ADDED: Conditional Rendering for Loading/Error ---
   if (loading) {
-    return <Container className="text-center mt-5 mb-5"><p>Loading products...</p></Container>;
+    return (
+      <Container className="text-center my-5">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </Container>
+    );
   }
 
   if (error) {
@@ -93,7 +100,15 @@ function ProductList() {
         ))}
       </Row>
       {products.length === 0 && !loading && (
-         <p className="text-center mt-4">No products found.</p>
+        <div className="text-center mt-5 mb-5 p-4 bg-light rounded">
+          <h4>No Products Found</h4>
+          <p className="text-muted">
+            {activeSearchTerm ? `Sorry, no snacks found matching "${activeSearchTerm}".` : "Check back later!"}
+          </p>
+          {activeSearchTerm && (
+            <Button variant="secondary" onClick={handleClearSearch}>Clear Search</Button>
+          )}
+        </div>
       )}
     </Container>
   );
